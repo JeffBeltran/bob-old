@@ -1,0 +1,37 @@
+{
+    "name": "jeffbeltran/bob",
+    "description": "Bob is an API Builder, say Hi!",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Jeff Beltran",
+            "email": "jeffbeltran@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "JeffBeltran\\Bob\\": "src/"
+        }
+    },
+    "require": {
+        "php": ">=5.4.0",
+        "illuminate/support": "~5.0"
+    },
+    "require-dev": {
+        "orchestra/testbench": "~3.0",
+        "phpunit/phpunit": "~6.0"
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/TestCase.php",
+            "tests/stubs/PostStub.php",
+            "tests/stubs/CommentStub.php",
+            "tests/app"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": ["JeffBeltran\\Bob"]
+        }
+    }
+}
