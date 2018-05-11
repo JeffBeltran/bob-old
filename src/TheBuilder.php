@@ -6,19 +6,18 @@ use app;
 
 class TheBuilder
 {
-    private $request;
     private $model;
+    private $result;
+    private $request;
     private $resource_id;
     private $queryBuilder;
-    private $isEloquent;
-    private $result;
+    private $isEloquent = false;
     private $filtersApplied = [];
 
     public function __construct($modelClassName, $resource_id = false)
     {
         $this->request = request();
         $this->model = new $modelClassName;
-        $this->isEloquent = false;
         $this->resource_id = $resource_id;
         $this->setQueryBuilderInstance();
         $this->applyDecorators();
@@ -61,6 +60,11 @@ class TheBuilder
     public function getModelName()
     {
         return kebab_case(class_basename($this->model));
+    }
+
+    public function isEloquent()
+    {
+        return $this->isEloquent;
     }
 
     /**

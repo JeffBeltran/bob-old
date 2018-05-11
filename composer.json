@@ -19,7 +19,9 @@
     },
     "require-dev": {
         "orchestra/testbench": "~3.0",
-        "phpunit/phpunit": "~6.0"
+        "phpunit/phpunit": "~6.0",
+        "laravel/scout": "^4.0",
+        "teamtnt/laravel-scout-tntsearch-driver": "^3.0"
     },
     "autoload-dev": {
         "classmap": [
