@@ -1,6 +1,6 @@
 <?php
 
-namespace App\QueryBlueprints\PostStub;
+namespace App\Blueprints\PostStub;
 
 use JeffBeltran\Bob\Blueprint;
 

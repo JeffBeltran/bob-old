@@ -93,7 +93,7 @@ class TheBuilder
         $className = class_basename($this->model);
         // apply each filter to query builder
         foreach ($this->request->all() as $filterName => $filterValue) {
-            $decorator = "App\\QueryBlueprints" . '\\' . $className . '\\' . studly_case($filterName);
+            $decorator = "App\\Blueprints" . '\\' . $className . '\\' . studly_case($filterName);
             if (class_exists($decorator)) {
                 $this->queryBuilder = $decorator::apply($this->queryBuilder, $filterValue);
                 $this->filtersApplied[$filterName] = explode(',', $filterValue);
