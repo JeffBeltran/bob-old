@@ -4,6 +4,14 @@ use JeffBeltran\Bob\TheBuilder;
 
 class ScoutTest extends TestCase
 {
+    private function getQueryStringResults($filters = [])
+    {
+        $request = request();
+        $request->merge($filters);
+
+        $bob = new TheBuilder(PostStub::class);
+        return $bob->getResults();
+    }
 
     /** @test */
     public function it_gives_BadMethodCallException_if_model_isnt_configured_for_scout()
@@ -45,7 +53,6 @@ class ScoutTest extends TestCase
     {
         $this->withoutExceptionHandling();
 
-        $request = request();
         $postOne = factory(PostStub::class)->create([
             'title' => 'bob'
         ]);
@@ -58,15 +65,38 @@ class ScoutTest extends TestCase
         $this->assertCount(3, PostStub::all());
 
         // search queryfilter set
-        $request->merge([
+        $returnedData = $this->getQueryStringResults([
             'search' => 'bob'
         ]);
 
-        $posts = new TheBuilder(PostStub::class);
-        
-        $returnedPosts = $posts->getResults();
-        $this->assertCount(1, $returnedPosts);
-        $this->assertEquals($postOne->id, $returnedPosts->first()->id);
+        $this->assertCount(1, $returnedData);
+        $this->assertEquals($postOne->id, $returnedData->first()->id);
         $this->assertCount(3, PostStub::all());
+    }
+
+    /** @test */
+    public function it_can_return_scout_results_with_relationships()
+    {
+        $this->withoutExceptionHandling();
+
+        $postOne = factory(PostStub::class)->create([
+            'title' => 'bob'
+        ]);
+        $postTwo = factory(PostStub::class)->create([
+            'title' => 'shouldnotfind'
+        ]);
+        factory(CommentStub::class, 5)->create([
+            'post_stub_id' => $postOne->id
+        ]);
+
+        // setting query string values this is the same as /endpoint?with=comments
+        $returnedData = $this->getQueryStringResults([
+            'search' => 'bob',
+            'with' => 'comments'
+        ]);
+
+        $this->assertCount(1, $returnedData->toArray());
+        $this->assertCount(5, $returnedData->toArray()[0]['comments']);
+        
     }
 }
