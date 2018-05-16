@@ -4,7 +4,10 @@ abstract class TestCase extends Orchestra\Testbench\TestCase
 {
     protected function getPackageProviders($app)
     {
-        return [];
+        return [
+            TeamTNT\Scout\TNTSearchScoutServiceProvider::class,
+            Laravel\Scout\ScoutServiceProvider::class,
+        ];
     }
 
     public function setUp()
@@ -24,6 +27,18 @@ abstract class TestCase extends Orchestra\Testbench\TestCase
 
     protected function getEnvironmentSetUp($app)
     {
+        $app['config']->set('scout.driver', 'tntsearch');
+        $app['config']->set('scout.tntsearch', [
+            'storage'  => storage_path(), //place where the index files will be stored
+            'fuzziness' => false,
+            'fuzzy' => [
+                'prefix_length' => 2,
+                'max_expansions' => 50,
+                'distance' => 2
+            ],
+            'asYouType' => false,
+            'searchBoolean' => false,
+        ]);
         $app['config']->set('database.default', 'testbench');
         $app['config']->set('database.connections.testbench', [
             'driver' => 'sqlite',

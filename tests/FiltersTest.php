@@ -39,23 +39,4 @@ class FiltersTest extends TestCase
         $this->assertEquals($postOne->title, $returnedData->first()->title);
         $this->assertEquals($postTwo->title, $returnedData->last()->title);
     }
-
-    /** @test */
-    public function it_gets_relationships()
-    {
-        $this->withoutExceptionHandling();
-
-        $post = factory(PostStub::class)->create();
-        factory(CommentStub::class, 5)->create([
-            'post_stub_id' => $post->id
-        ]);
-
-        // setting query string values this is the same as /endpoint?with=comments
-        $returnedData = $this->getQueryStringResults([
-            'with' => 'comments'
-        ]);
-
-        $this->assertCount(1, $returnedData->toArray());
-        $this->assertCount(5, $returnedData->toArray()[0]['comments']);
-    }
 }

@@ -6,23 +6,29 @@ use app;
 
 class TheBuilder
 {
-    private $request;
     private $model;
+    private $result;
+    private $request;
+    private $isEloquent;
     private $resource_id;
     private $queryBuilder;
-    private $isEloquent;
-    private $result;
     private $filtersApplied = [];
+    private $reservedBlueprints;
 
     public function __construct($modelClassName, $resource_id = false)
     {
         $this->request = request();
         $this->model = new $modelClassName;
-        $this->isEloquent = false;
         $this->resource_id = $resource_id;
+        $this->isEloquent = false;
+        $this->reservedBlueprints = collect([
+            'with',
+            'search',
+            'limit'
+        ]);
         $this->setQueryBuilderInstance();
-        $this->applyDecorators();
-        $this->saveQueryBuilder();
+        $this->orginizeBlueprints();
+        $this->publishBlueprints();
     }
 
     /**
@@ -40,6 +46,9 @@ class TheBuilder
         return $this->result;
     }
 
+    /**
+     * Since we have API resources in Laravel i will remove this... but will need to refactor my code first
+     */
     public function getAPIResource()
     {
         $api_resource = [
@@ -53,14 +62,35 @@ class TheBuilder
         return $api_resource;
     }
 
+    /**
+     * Returns list of applied filters... i was playing around with the idea of statemanement via sessions, but i'll
+     * need to hank this as well i think...
+     *
+     * @return array
+     */
     public function getFilters()
     {
         return $this->filtersApplied;
     }
 
+    /**
+     * Getter for model name used
+     *
+     * @return string
+     */
     public function getModelName()
     {
         return kebab_case(class_basename($this->model));
+    }
+
+    /**
+     * returns true if query builder is eloquent instance, if scout instance returns false
+     *
+     * @return boolean
+     */
+    public function isEloquent()
+    {
+        return $this->isEloquent;
     }
 
     /**
@@ -88,15 +118,19 @@ class TheBuilder
     /**
      * Applies all the filters to the query builder
      */
-    private function applyDecorators()
+    private function orginizeBlueprints()
     {
-        $className = class_basename($this->model);
+        // filter out reserved blueprint names
+        $requestedBluePrints = collect($this->request->all())->reject(function ($blueprintValue, $blueprint) {
+            return $this->reservedBlueprints->contains($blueprint);
+        });
+
         // apply each filter to query builder
-        foreach ($this->request->all() as $filterName => $filterValue) {
-            $decorator = "App\\QueryBlueprints" . '\\' . $className . '\\' . studly_case($filterName);
+        foreach ($requestedBluePrints as $blueprint => $blueprintValue) {
+            $decorator = "App\\Blueprints" . '\\' . class_basename($this->model) . '\\' . studly_case($blueprint);
             if (class_exists($decorator)) {
-                $this->queryBuilder = $decorator::apply($this->queryBuilder, $filterValue);
-                $this->filtersApplied[$filterName] = explode(',', $filterValue);
+                $this->queryBuilder = $decorator::apply($this->queryBuilder, $blueprintValue);
+                $this->filtersApplied[$blueprint] = explode(',', $blueprintValue);
             }
         }
     }
@@ -104,7 +138,7 @@ class TheBuilder
     /**
      * Sets the result value for the query
      */
-    private function saveQueryBuilder()
+    private function publishBlueprints()
     {
         // Scout instances do not have eager loading so we much lazy load the query
         // to get relationships (if requested)
@@ -128,14 +162,15 @@ class TheBuilder
                 $resultCollection = $this->queryBuilder->get();
                 $resultCollection = $resultCollection->values();
             }
+            
+            $this->result = $resultCollection;
+        }
 
-            if ($this->request->has('with')) {
-                $withArray = explode(',', $this->request->query('with'));
-                $resultCollection->load($withArray);
-                $this->result = $resultCollection;
-            } else {
-                $this->result = $resultCollection;
-            }
+        // attach relationships
+        if ($this->request->has('with')) {
+            $this->filtersApplied['with'] = [$this->request->get('with')];
+            $withArray = explode(',', $this->request->get('with'));
+            $this->result->load($withArray);
         }
     }
 }
