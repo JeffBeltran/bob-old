@@ -90,17 +90,17 @@ _Note that I didn’t include a With class, this is because it is already built 
 `Limit`, `With` and `Search` are all reserved due to the way you need to process the filters/blueprints
 
 #### Limit
-Mockup: `limit=paginationlength`
-Example: `/posts?limit=5` 
-Description: This is how you would paginate the returned data into Laravel’s Length Aware Paginator
+Mockup: `limit=paginationlength`  
+Example: `/posts?limit=5`  
+Description: This is how you would paginate the returned data into Laravel’s Length Aware Paginator  
 #### With
-Mockup: `with=relation_one_name,relation_two_name`
-Example: `/posts?with=comments`
+Mockup: `with=relation_one_name,relation_two_name`  
+Example: `/posts?with=comments`  
 Description: This is how you would get  the resources with their relationships. You can load multiple relationships
 by using commas to separate different relationship names.
 #### Search
-Mockup: `search=somesearchterm`
-Example: `/posts?search=bobthebuilder` 
+Mockup: `search=somesearchterm`  
+Example: `/posts?search=bobthebuilder`   
 Description: This allows you to search the endpoint with your scout instance.
 
 ### Caveats and other tidbits
