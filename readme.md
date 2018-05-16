@@ -1,4 +1,4 @@
-# # Bob - An API Query String Builder
+# Bob - An API Query String Builder
 
 This is a Laravel package that will allow you to create query scopes that can be applied to an API's Endpoint dynamically via Query Strings.
 
@@ -128,8 +128,10 @@ Assuming you are following a “RESTful” design. Then you would want your cont
 	    {
 	        $queryFilter = new TheBuilder(Post::class, $id);
 	        return $bob->getResults();
-	    }
-		...
+        }
+        
+        ...
+        
 	}
 ```
 
