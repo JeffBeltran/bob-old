@@ -38,23 +38,7 @@ class TheBuilder
      */
     public function getResults()
     {
-        if ($this->request->has('session')) {
-            if ($this->request->get('session') === "true") {
-                $this->request->session()->put($this->getModelName() . "-filters", $this->filtersApplied);
-            }
-        }
         return $this->result;
-    }
-
-    /**
-     * Returns list of applied filters... i was playing around with the idea of statemanement via sessions, but i'll
-     * need to hank this as well i think...
-     *
-     * @return array
-     */
-    public function getFilters()
-    {
-        return $this->filtersApplied;
     }
 
     /**
