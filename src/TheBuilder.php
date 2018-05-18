@@ -47,22 +47,6 @@ class TheBuilder
     }
 
     /**
-     * Since we have API resources in Laravel i will remove this... but will need to refactor my code first
-     */
-    public function getAPIResource()
-    {
-        $api_resource = [
-            'data' => $this->result
-        ];
-        if ($this->request->has('meta')) {
-            if ($this->request->get('meta')) {
-                $api_resource['meta'] = [$this->getModelName() . "-filters" => $this->filtersApplied];
-            }
-        }
-        return $api_resource;
-    }
-
-    /**
      * Returns list of applied filters... i was playing around with the idea of statemanement via sessions, but i'll
      * need to hank this as well i think...
      *
