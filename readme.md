@@ -51,9 +51,9 @@ Since I like examples, here are the two classes you would have to create for
  `/posts?with=comments&author=2$sort=created_at,asc`
 
 ```php
-<?php
+<?php // Sort.php
 
-namespace App\Blueprints\Posts;
+namespace App\Blueprints\Post;
 
 use JeffBeltran\Bob\Blueprint;
 
@@ -68,9 +68,9 @@ class Sort implements Blueprint
 ```
 
 ```php
-<?php
+<?php // Author.php
 
-namespace App\Blueprints\Posts;
+namespace App\Blueprints\Post;
 
 use JeffBeltran\Bob\Blueprint;
 
@@ -120,14 +120,12 @@ Assuming you are following a “RESTful” design. Then you would want your cont
 	{
 	    public function index()
 	    {
-	        $bob = new TheBuilder(Post::class);
-	        return $bob->getResults();
+	        return (new TheBuilder(Post::class))->getResults();
 	    }
 	
 	    public function show($id)
 	    {
-	        $queryFilter = new TheBuilder(Post::class, $id);
-	        return $bob->getResults();
+	        return (new TheBuilder(Post::class, $id))->getResults();
         }
         
         ...
