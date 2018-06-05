@@ -26,7 +26,7 @@ So why create this? well two reasons
 ### Install via composer
 
 ```
-composer install jeffbeltran/bob
+composer require jeffbeltran/bob
 ```
 
 If you want the built in “search” feature to work you will need to have scout configured and setup, the scope of this readme does not cover those details, please refer to [The Laravel Scout Docs](https://laravel.com/docs/5.6/scout) for more information on how to configure it. 

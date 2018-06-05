@@ -30,10 +30,5 @@
             "tests/stubs/CommentStub.php",
             "tests/app"
         ]
-    },
-    "extra": {
-        "laravel": {
-            "providers": ["JeffBeltran\\Bob"]
-        }
     }
 }
