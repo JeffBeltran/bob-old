@@ -125,9 +125,9 @@ Assuming you are following a “RESTful” design. Then you would want your cont
 	
 	    public function show($id)
 	    {
-	        return (new TheBuilder(Post::class, $id))->getResults();
-        }
-        
+                return (new TheBuilder(Post::class, $id))->getResults();
+            }
+
         ...
         
 	}
